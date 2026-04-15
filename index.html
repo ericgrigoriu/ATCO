@@ -125,22 +125,27 @@
   </div>
 
 <script>
-	
-  const SUPABASE_URL = "https://lwdjghocgkscsdfujghz.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_zjPKSGyYr989a0pYqdwb7g_ysIdv4gz";
+  const SUPABASE_URL = "HIER_DEINE_SUPABASE_URL";
+  const SUPABASE_KEY = "HIER_DEIN_PUBLISHABLE_ODER_ANON_KEY";
 
-  
-	
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx9AHhop3Cj-19xFtrZf1tzoq2U3mQR9YORhew3L6-VOoxzB13VnWUgDHKS-ysI_jYk/exec";
+  let startTime = 0;
+  let reactionTimeMs = null;
+  let firstDecision = null;
+  let currentSituationIndex = 1;
 
-  let sessionId = localStorage.getItem("surveySessionId");
-  if (!sessionId) {
-  	sessionId = "session_" + Date.now() + "_" + Math.floor(Math.random() * 1000000);
-  	localStorage.setItem("surveySessionId", sessionId);
+  const totalImages = 7; // anpassen
+
+  function getParticipantId() {
+    let id = localStorage.getItem("participantId");
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem("participantId", id);
+    }
+    return id;
   }
 
   async function sendResultToSupabase(entry) {
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/responses`, {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/responses`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -155,50 +160,6 @@
       const errorText = await response.text();
       throw new Error(errorText);
     }
-  }
-
-  function getParticipantId() {
-  let id = localStorage.getItem("participantId");
-
-  if (!id) {
-      id = crypto.randomUUID();
-      localStorage.setItem("participantId", id);
-  }
-
-    return id;
-  }
-
-  function sendResultToGoogleSheet(entry) {
-  	const form = document.createElement("form");
-  	form.method = "POST";
-  	form.action = SCRIPT_URL;
-  	form.target = "hidden_iframe";
-  	form.style.display = "none";
-
-  for (const key in entry) {
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = key;
-    input.value = entry[key];
-    form.appendChild(input);
-  }
-
-  document.body.appendChild(form);
-  form.submit();
-  document.body.removeChild(form);
-}
-
-  let startTime = 0;
-  let reactionTimeMs = null;
-  let firstDecision = null;
-  let currentSituationIndex = 1;
-
-  const totalImages = 3; // <- HIER Anzahl deiner Bilder eintragen
-
-  function showImagePage() {
-    document.getElementById("startPage").style.display = "none";
-    document.getElementById("imagePage").style.display = "flex";
-    loadSituation();
   }
 
   function loadSituation() {
@@ -217,7 +178,13 @@
     document.getElementById("interventionOptions").style.display = "none";
   }
 
-  function handleInterventionStart() {
+  window.showImagePage = function () {
+    document.getElementById("startPage").style.display = "none";
+    document.getElementById("imagePage").style.display = "flex";
+    loadSituation();
+  };
+
+  window.handleInterventionStart = function () {
     if (reactionTimeMs === null) {
       reactionTimeMs = Math.round(performance.now() - startTime);
       firstDecision = "eingriff";
@@ -225,9 +192,9 @@
 
     document.getElementById("mainOptions").style.display = "none";
     document.getElementById("interventionOptions").style.display = "block";
-  }
+  };
 
-    async function recordReaction(action) {
+  window.recordReaction = async function (action) {
     if (reactionTimeMs === null) {
       reactionTimeMs = Math.round(performance.now() - startTime);
       firstDecision = action;
@@ -245,36 +212,13 @@
 
     try {
       await sendResultToSupabase(entry);
-
-      console.log("Erfolgreich an Supabase gespeichert:", entry);
-
+      console.log("Erfolgreich gespeichert:", entry);
       nextSituation();
     } catch (error) {
       console.error("Fehler beim Speichern:", error);
-      alert("Speichern fehlgeschlagen. Bitte Seite nicht schließen.");
+      alert("Speichern fehlgeschlagen. Bitte F12 öffnen und Konsole prüfen.");
     }
-  }
-
-    const entry = {
-  	clientTimestamp: new Date().toISOString(),
-  	sessionId: sessionId,
-  	situation: "Situation " + currentSituationIndex,
-  	image: "Bild" + currentSituationIndex + ".png",
-  	firstDecision: firstDecision,
-  	finalAction: action,
-  	reactionTimeMs: reactionTimeMs
-    };
-
-    sendResultToGoogleSheet(entry);
-
-    const oldData = JSON.parse(localStorage.getItem("surveyResults") || "[]");
-    oldData.push(entry);
-    localStorage.setItem("surveyResults", JSON.stringify(oldData));
-
-    console.log("Gespeichert:", entry);
-
-    nextSituation();
-  }
+  };
 
   function nextSituation() {
     currentSituationIndex++;
@@ -287,46 +231,13 @@
   }
 
   function showEndPage() {
-  document.getElementById("imagePage").innerHTML = `
-    <div class="card">
-      <h1>Danke</h1>
-      <p>Alle Situationen wurden bearbeitet.</p>
-    </div>
-  `;
-}
-
-  function getStoredResults() {
-    return JSON.parse(localStorage.getItem("surveyResults") || "[]");
-  }
-
-  function showStoredResults() {
-    console.table(getStoredResults());
-  }
-
-  function clearStoredResults() {
-    localStorage.removeItem("surveyResults");
-    console.log("Alle lokal gespeicherten Ergebnisse wurden gelöscht.");
-  }
-
-  function downloadStoredResults() {
-    const data = getStoredResults();
-
-    let csv = "timestamp;situation;image;firstDecision;finalAction;reactionTimeMs\n";
-    data.forEach(row => {
-      csv += `${row.timestamp};${row.situation};${row.image};${row.firstDecision};${row.finalAction};${row.reactionTimeMs}\n`;
-    });
-
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "results.csv";
-    a.click();
-
-    URL.revokeObjectURL(url);
+    document.getElementById("imagePage").innerHTML = `
+      <div class="card">
+        <h1>Fertig</h1>
+        <p>Alle ${totalImages} Situationen wurden bearbeitet.</p>
+      </div>
+    `;
   }
 </script>
-
 </body>
 </html>
