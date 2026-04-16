@@ -2,10 +2,14 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
+
+  <!-- Sorgt für saubere Darstellung auf mobilen Geräten -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Startseite mit Bild</title>
 
   <style>
+    /* Grundlayout der Seite */
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -13,6 +17,7 @@
       text-align: center;
     }
 
+    /* Zentriert ganze Seitenbereiche vertikal und horizontal */
     .screen {
       min-height: 100vh;
       display: flex;
@@ -21,18 +26,21 @@
       align-items: center;
     }
 
+    /* Weiße Kartenbox für Inhalte */
     .card {
       background: white;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       max-width: 90vw;
     }
 
+    /* Überschrift etwas kompakter */
     h1 {
       margin-top: 0;
     }
 
+    /* Standardstil für Buttons */
     button {
       padding: 12px 24px;
       font-size: 16px;
@@ -44,24 +52,28 @@
       margin-top: 20px;
     }
 
+    /* Leichter Hover-Effekt */
     button:hover {
       opacity: 0.9;
     }
 
+    /* Bildseite ist am Anfang unsichtbar */
     #imagePage {
       display: none;
       padding: 20px;
     }
 
+    /* Darstellung der Situationsbilder */
     #imagePage img {
       width: 1200px;
       max-width: 95vw;
       height: auto;
       border-radius: 8px;
       margin-top: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
+    /* Container für Antwortbuttons */
     .action-buttons {
       margin-top: 20px;
       display: flex;
@@ -70,6 +82,7 @@
       flex-wrap: wrap;
     }
 
+    /* Farbklassen für Hauptbuttons */
     .green {
       background: #4CAF50;
     }
@@ -78,185 +91,183 @@
       background: #FF0000;
     }
 
+    /* Diese Klassen lasse ich drin, falls du sie später noch verwendest */
     .btn-eingriff {
-  	  background: #c0392b;
-  	color: white;
-	}
+      background: #c0392b;
+      color: white;
+    }
 
     .btn-kein-eingriff {
-  	  background: #5bb450;
-  	  color: white;
-	}
+      background: #5bb450;
+      color: white;
+    }
 
-	.form-block {
-  	  margin-top: 20px;
+    /* Block für Dropdown-Felder auf der Startseite */
+    .form-block {
+      margin-top: 20px;
       text-align: left;
     }
 
-	.form-block label {
-  	  display: block;
-  	  margin-bottom: 8px;
-  	  font-weight: bold;
-	}
+    /* Beschriftung über den Auswahlfeldern */
+    .form-block label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
 
-	.form-block select {
-  	  width: 100%;
-  	  max-width: 320px;
-  	  padding: 10px;
-  	  font-size: 16px;
-  	  border: 1px solid #ccc;
-  	  border-radius: 8px;
-  	  box-sizing: border-box;
-	}
+    /* Stil der Dropdowns */
+    .form-block select {
+      width: 100%;
+      max-width: 320px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
 
-	.form-block {
-  	  margin-top: 20px;
-  	  text-align: left;
-	}
+    /* Styles für die spätere Feedback-Seite */
+    .feedback-list {
+      margin-top: 20px;
+      text-align: left;
+    }
 
-	.form-block label {
-  	  display: block;
-  	  margin-bottom: 8px;
-  	  font-weight: bold;
-	}
+    .feedback-item {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+      background: #fafafa;
+    }
 
-	.form-block select {
-  	  width: 100%;
-  	  max-width: 320px;
-  	  padding: 10px;
-  	  font-size: 16px;
-  	  border: 1px solid #ccc;
-  	  border-radius: 8px;
-  	  box-sizing: border-box;
-	}
+    .feedback-item h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
 
-	.feedback-list {
-  margin-top: 20px;
-  text-align: left;
-}
+    .feedback-item label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
 
-.feedback-item {
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 16px;
-  margin-bottom: 16px;
-  background: #fafafa;
-}
+    .feedback-item select,
+    .feedback-item textarea {
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
 
-.feedback-item h3 {
-  margin-top: 0;
-  margin-bottom: 12px;
-  font-size: 18px;
-}
-
-.feedback-item label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: bold;
-}
-
-.feedback-item select,
-.feedback-item textarea {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  padding: 10px;
-  font-size: 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  margin-bottom: 12px;
-}
-
-.feedback-item textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-	  
+    .feedback-item textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
   </style>
 </head>
-	
+
 <body>
-  <iframe name="hidden_iframe" style="display:none;"></iframe>
 
-  <!-- Startseite -->
-
+  <!-- Startseite mit Einführung und zwei Pflichtangaben -->
   <div id="startPage" class="screen">
-  <div class="card">
-    <h1>Startseite</h1>
-    <p>
-      Dir werden nacheinander mehrere Situationen aus der Sicht eines ATCO angezeigt.
-      Bitte entscheide jeweils, ob ein Eingriff erforderlich ist oder nicht.
-    </p>
-
-    <div class="form-block">
-      <label for="ageGroup">Altersgruppe</label>
-      <select id="ageGroup">
-        <option value="">Bitte auswählen</option>
-        <option value="unter_20">unter 20</option>
-        <option value="20_29">20–29</option>
-        <option value="30_39">30–39</option>
-        <option value="40_49">40-49</option>
-		<option value="50_59">50-59</option>
-		<option value="60+">60+</option>
-      </select>
-    </div>
-
-    <div class="form-block">
-      <label for="experienceLevel">Vorerfahrung mit Air Traffic Control</label>
-      <select id="experienceLevel">
-        <option value="">Bitte auswählen</option>
-        <option value="keine">keine</option>
-        <option value="wenig">wenig</option>
-        <option value="viel">viel</option>
-      </select>
-    </div>
-
-    <button type="button" onclick="startSurvey()">Start</button>
-  </div>
-</div>
-
-  <!-- Bildseite -->
-  <div id="imagePage" class="screen">
     <div class="card">
-      <h1 id="situationTitle">Situation 1</h1>
-      <img id="situationImage" src="Bild1.png" alt="Situation 1">
+      <h1>Startseite</h1>
 
-      <div class="action-buttons">
-  	  <div id="mainOptions">
-    	<button class="green" onclick="handleInterventionStart()">Eingriff</button>
-    	<button class="red" onclick="recordReaction('kein_eingriff')">Kein Eingriff</button>
-  	</div>
+      <p>
+        Dir werden nacheinander mehrere Situationen aus der Sicht eines ATCO angezeigt.
+        Bitte entscheide jeweils, ob ein Eingriff erforderlich ist oder nicht.
+      </p>
 
-  <div id="interventionOptions" style="display: none; margin-top: 20px;">
-    <button onclick="recordReaction('steigen')">Steigen</button>
-    <button onclick="recordReaction('sinken')">Sinken</button>
-    <button onclick="recordReaction('links')">Links</button>
-    <button onclick="recordReaction('rechts')">Rechts</button>
+      <!-- Auswahl der Altersgruppe -->
+      <div class="form-block">
+        <label for="ageGroup">Altersgruppe</label>
+        <select id="ageGroup">
+          <option value="">Bitte auswählen</option>
+          <option value="unter_20">unter 20</option>
+          <option value="20_29">20–29</option>
+          <option value="30_39">30–39</option>
+          <option value="40_49">40–49</option>
+          <option value="50_59">50–59</option>
+          <option value="60_plus">60+</option>
+        </select>
+      </div>
+
+      <!-- Auswahl der Vorerfahrung -->
+      <div class="form-block">
+        <label for="experienceLevel">Vorerfahrung mit Air Traffic Control</label>
+        <select id="experienceLevel">
+          <option value="">Bitte auswählen</option>
+          <option value="keine">keine</option>
+          <option value="wenig">wenig</option>
+          <option value="viel">viel</option>
+        </select>
+      </div>
+
+      <!-- Startet später die Umfrage per JavaScript -->
+      <button type="button" onclick="startSurvey()">Start</button>
+    </div>
   </div>
-</div>
+
 	
-</div>
+  <!-- Bildseite: hier werden nacheinander alle Situationen angezeigt -->
+<div id="imagePage" class="screen">
+  <div class="card">
+    <!-- Titel der aktuellen Situation -->
+    <h1 id="situationTitle">Situation 1</h1>
+
+    <!-- Bild der aktuellen Situation -->
+    <img id="situationImage" src="Bild1.png" alt="Situation 1">
+
+    <!-- Antwortbuttons -->
+    <div class="action-buttons">
+      <!-- Erste Entscheidungsebene -->
+      <div id="mainOptions">
+        <button class="green" onclick="handleInterventionStart()">Eingriff</button>
+        <button class="red" onclick="recordReaction('kein_eingriff')">Kein Eingriff</button>
+      </div>
+
+      <!-- Zweite Entscheidungsebene, nur sichtbar nach Klick auf "Eingriff" -->
+      <div id="interventionOptions" style="display: none; margin-top: 20px;">
+        <button onclick="recordReaction('steigen')">Steigen</button>
+        <button onclick="recordReaction('sinken')">Sinken</button>
+        <button onclick="recordReaction('links')">Links</button>
+        <button onclick="recordReaction('rechts')">Rechts</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
+  // Supabase-Verbindungsdaten
   const SUPABASE_URL = "https://lwdjghocgkscsdfujghz.supabase.co";
   const SUPABASE_KEY = "sb_publishable_zjPKSGyYr989a0pYqdwb7g_ysIdv4gz";
 
+  // Laufzeitvariablen für die aktuelle Situation
   let startTime = 0;
   let reactionTimeMs = null;
   let firstDecision = null;
   let currentSituationIndex = 1;
+
+  // Angaben aus der Startseite
   let ageGroup = "";
   let experienceLevel = "";
 
-  const totalImages = 3; // anpassen
+  // Anzahl der vorhandenen Bilder: Bild1.png bis BildX.png
+  const totalImages = 3;
 
+  // Optionen für das Abschlussfeedback
   const improvementOptions = [
-  	"Unterstützung A",
-  	"Unterstützung B",
-  	"Unterstützung C"
+    "Unterstützung A",
+    "Unterstützung B",
+    "Unterstützung C"
   ];
 
+  // Erzeugt oder liest eine eindeutige Teilnehmer-ID im Browser
   function getParticipantId() {
     let id = localStorage.getItem("participantId");
     if (!id) {
@@ -266,6 +277,7 @@
     return id;
   }
 
+  // Speichert eine Reaktion auf ein Bild in der Tabelle "responses"
   async function sendResultToSupabase(entry) {
     const response = await fetch(`${SUPABASE_URL}/rest/v1/responses`, {
       method: "POST",
@@ -279,29 +291,29 @@
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText);
+      throw new Error(await response.text());
     }
   }
 
-async function sendImprovementFeedbackToSupabase(entry) {
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/improvement_feedback`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "apikey": SUPABASE_KEY,
-      "Authorization": `Bearer ${SUPABASE_KEY}`,
-      "Prefer": "return=minimal"
-    },
-    body: JSON.stringify(entry)
-  });
+  // Speichert das Abschlussfeedback in der Tabelle "improvement_feedback"
+  async function sendImprovementFeedbackToSupabase(entry) {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/improvement_feedback`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify(entry)
+    });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText);
+    if (!response.ok) {
+      throw new Error(await response.text());
+    }
   }
-}
 
+  // Lädt die aktuelle Situation: Titel, Bild und Timer werden zurückgesetzt
   function loadSituation() {
     document.getElementById("situationTitle").textContent =
       "Situation " + currentSituationIndex;
@@ -318,43 +330,23 @@ async function sendImprovementFeedbackToSupabase(entry) {
     document.getElementById("interventionOptions").style.display = "none";
   }
 
+  // Startet die Umfrage nach Prüfung der beiden Pflichtfelder
   window.startSurvey = function () {
-  const ageSelect = document.getElementById("ageGroup");
-  const expSelect = document.getElementById("experienceLevel");
-  const startPage = document.getElementById("startPage");
-  const imagePage = document.getElementById("imagePage");
-  const titleEl = document.getElementById("situationTitle");
-  const imgEl = document.getElementById("situationImage");
+    ageGroup = document.getElementById("ageGroup").value;
+    experienceLevel = document.getElementById("experienceLevel").value;
 
-  if (!ageSelect || !expSelect) {
-    alert("ageGroup oder experienceLevel wurde im HTML nicht gefunden.");
-    console.error("Fehlende Select-Elemente", { ageSelect, expSelect });
-    return;
-  }
+    if (!ageGroup || !experienceLevel) {
+      alert("Bitte wähle zuerst Altersgruppe und Vorerfahrung aus.");
+      return;
+    }
 
-  if (!startPage || !imagePage || !titleEl || !imgEl) {
-    alert("Ein benötigtes Element der Bildseite wurde nicht gefunden.");
-    console.error("Fehlende Elemente", { startPage, imagePage, titleEl, imgEl });
-    return;
-  }
+    document.getElementById("startPage").style.display = "none";
+    document.getElementById("imagePage").style.display = "flex";
+    loadSituation();
+  };
 
-  ageGroup = ageSelect.value;
-  experienceLevel = expSelect.value;
-
-  if (!ageGroup || !experienceLevel) {
-    alert("Bitte wähle zuerst Altersgruppe und Vorerfahrung aus.");
-    return;
-  }
-
-  startPage.style.display = "none";
-  imagePage.style.display = "flex";
-  loadSituation();
-};
-
-// optional: falls irgendwo noch showImagePage() aufgerufen wird
-	
-window.showImagePage = window.startSurvey;
-
+  // Reagiert auf den ersten Klick "Eingriff"
+  // Dabei wird die Reaktionszeit gestoppt, aber noch keine Endaktion gespeichert
   window.handleInterventionStart = function () {
     if (reactionTimeMs === null) {
       reactionTimeMs = Math.round(performance.now() - startTime);
@@ -365,7 +357,9 @@ window.showImagePage = window.startSurvey;
     document.getElementById("interventionOptions").style.display = "block";
   };
 
+  // Speichert die endgültige Reaktion auf eine Situation
   window.recordReaction = async function (action) {
+    // Falls direkt "Kein Eingriff" gewählt wurde, wird hier die Zeit gestoppt
     if (reactionTimeMs === null) {
       reactionTimeMs = Math.round(performance.now() - startTime);
       firstDecision = action;
@@ -373,8 +367,8 @@ window.showImagePage = window.startSurvey;
 
     const entry = {
       participant_id: getParticipantId(),
-	  age_group: ageGroup,
-  	  experience_level: experienceLevel,
+      age_group: ageGroup,
+      experience_level: experienceLevel,
       situation_no: currentSituationIndex,
       image_name: "Bild" + currentSituationIndex + ".png",
       first_decision: firstDecision,
@@ -385,7 +379,6 @@ window.showImagePage = window.startSurvey;
 
     try {
       await sendResultToSupabase(entry);
-      console.log("Erfolgreich gespeichert:", entry);
       nextSituation();
     } catch (error) {
       console.error("Fehler beim Speichern:", error);
@@ -393,6 +386,7 @@ window.showImagePage = window.startSurvey;
     }
   };
 
+  // Wechselt entweder zur nächsten Situation oder zum Abschlussfeedback
   function nextSituation() {
     currentSituationIndex++;
 
@@ -403,233 +397,90 @@ window.showImagePage = window.startSurvey;
     }
   }
 
+  // Baut die Abschlussseite mit Bewertung und Freitext für jede Option auf
   function showFeedbackPage() {
-  const feedbackHtml = improvementOptions.map((option, index) => `
-    <div class="feedback-item">
-      <h3>${option}</h3>
+    const feedbackHtml = improvementOptions.map((option, index) => `
+      <div class="feedback-item">
+        <h3>${option}</h3>
 
-      <label for="rating_${index}">Bewertung (0–5)</label>
-      <select id="rating_${index}">
-        <option value="">Bitte auswählen</option>
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
+        <label for="rating_${index}">Bewertung (0–5)</label>
+        <select id="rating_${index}">
+          <option value="">Bitte auswählen</option>
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
 
-      <label for="comment_${index}">Anmerkungen</label>
-      <textarea id="comment_${index}" placeholder="..."></textarea>
-    </div>
-  `).join("");
-
-  document.getElementById("imagePage").innerHTML = `
-    <div class="card">
-      <h1>Abschlussfeedback</h1>
-      <p>Bitte bewerte die folgenden Unterstützungen und gib jeweils eine kurze Anmerkung.</p>
-
-      <div class="feedback-list">
-        ${feedbackHtml}
+        <label for="comment_${index}">Anmerkungen</label>
+        <textarea id="comment_${index}" placeholder="..."></textarea>
       </div>
+    `).join("");
 
-      <button onclick="submitImprovementFeedback()">Feedback absenden</button>
-    </div>
-  `;
-}
+    document.getElementById("imagePage").innerHTML = `
+      <div class="card">
+        <h1>Abschlussfeedback</h1>
+        <p>Bitte bewerte die folgenden Unterstützungen und gib jeweils eine kurze Anmerkung.</p>
 
-window.submitImprovementFeedback = async function () {
-  const participantId = getParticipantId();
-  const entries = [];
+        <div class="feedback-list">
+          ${feedbackHtml}
+        </div>
 
-  for (let i = 0; i < improvementOptions.length; i++) {
-    const rating = document.getElementById(`rating_${i}`).value;
-    const comment = document.getElementById(`comment_${i}`).value.trim();
-
-    if (rating === "") {
-      alert(`Bitte wähle für "${improvementOptions[i]}" eine Bewertung aus.`);
-      return;
-    }
-
-    entries.push({
-      participant_id: participantId,
-      option_name: improvementOptions[i],
-      rating: Number(rating),
-      comment: comment,
-      client_timestamp: new Date().toISOString()
-    });
+        <button onclick="submitImprovementFeedback()">Feedback absenden</button>
+      </div>
+    `;
   }
-
-  try {
-    for (const entry of entries) {
-      await sendImprovementFeedbackToSupabase(entry);
-    }
-
-    showFinalThankYouPage();
-  } catch (error) {
-    console.error("Fehler beim Speichern des Feedbacks:", error);
-    alert("Feedback konnte nicht gespeichert werden. Bitte F12 öffnen und Konsole prüfen.");
-  }
-};
-
-  function showFinalThankYouPage() {
-  document.getElementById("imagePage").innerHTML = `
-    <div class="card">
-      <h1>Fertig</h1>
-      <p>Danke, deine Antworten und dein Feedback wurden gespeichert.</p>
-    </div>
-  `;
-}
 </script>
-</body>
-</html>
 
-  <!-- Bildseite -->
-  <div id="imagePage" class="screen">
-    <div class="card">
-      <h1 id="situationTitle">Situation 1</h1>
-      <img id="situationImage" src="Bild1.png" alt="Situation 1">
+  // Sammelt alle Bewertungen und Kommentare der Feedback-Seite ein
+  // und speichert sie in der Tabelle "improvement_feedback"
+  window.submitImprovementFeedback = async function () {
+    const participantId = getParticipantId();
+    const entries = [];
 
-      <div class="action-buttons">
-  <div id="mainOptions">
-    <button class="green" onclick="handleInterventionStart()">Eingriff</button>
-    <button class="red" onclick="recordReaction('kein_eingriff')">Kein Eingriff</button>
-  </div>
+    // Alle definierten Verbesserungsoptionen durchgehen
+    for (let i = 0; i < improvementOptions.length; i++) {
+      const rating = document.getElementById(`rating_${i}`).value;
+      const comment = document.getElementById(`comment_${i}`).value.trim();
 
-  <div id="interventionOptions" style="display: none; margin-top: 20px;">
-    <button onclick="recordReaction('steigen')">Steigen</button>
-    <button onclick="recordReaction('sinken')">Sinken</button>
-    <button onclick="recordReaction('links')">Links</button>
-    <button onclick="recordReaction('rechts')">Rechts</button>
-  </div>
-</div>
+      // Bewertung ist Pflicht
+      if (rating === "") {
+        alert(`Bitte wähle für "${improvementOptions[i]}" eine Bewertung aus.`);
+        return;
+      }
 
-    </div>
-  </div>
-
-<script>
-  const SUPABASE_URL = "https://lwdjghocgkscsdfujghz.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_zjPKSGyYr989a0pYqdwb7g_ysIdv4gz";
-
-  let startTime = 0;
-  let reactionTimeMs = null;
-  let firstDecision = null;
-  let currentSituationIndex = 1;
-  let ageGroup = "";
-  let experienceLevel = "";
-
-  const totalImages = 3; // anpassen
-
-  function getParticipantId() {
-    let id = localStorage.getItem("participantId");
-    if (!id) {
-      id = crypto.randomUUID();
-      localStorage.setItem("participantId", id);
+      // Ein Datensatz pro Option
+      entries.push({
+        participant_id: participantId,
+        option_name: improvementOptions[i],
+        rating: Number(rating),
+        comment: comment,
+        client_timestamp: new Date().toISOString()
+      });
     }
-    return id;
-  }
-
-  async function sendResultToSupabase(entry) {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/responses`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": SUPABASE_KEY,
-        "Authorization": `Bearer ${SUPABASE_KEY}`,
-        "Prefer": "return=minimal"
-      },
-      body: JSON.stringify(entry)
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText);
-    }
-  }
-
-  function loadSituation() {
-    document.getElementById("situationTitle").textContent =
-      "Situation " + currentSituationIndex;
-
-    const img = document.getElementById("situationImage");
-    img.src = "Bild" + currentSituationIndex + ".png";
-    img.alt = "Situation " + currentSituationIndex;
-
-    startTime = performance.now();
-    reactionTimeMs = null;
-    firstDecision = null;
-
-    document.getElementById("mainOptions").style.display = "block";
-    document.getElementById("interventionOptions").style.display = "none";
-  }
-
-  window.startSurvey = function () {
-  ageGroup = document.getElementById("ageGroup").value;
-  experienceLevel = document.getElementById("experienceLevel").value;
-
-  if (!ageGroup || !experienceLevel) {
-    alert("Bitte wähle zuerst Altersgruppe und Vorerfahrung aus.");
-    return;
-  }
-
-  document.getElementById("startPage").style.display = "none";
-  document.getElementById("imagePage").style.display = "flex";
-  loadSituation();
-};
-
-  window.handleInterventionStart = function () {
-    if (reactionTimeMs === null) {
-      reactionTimeMs = Math.round(performance.now() - startTime);
-      firstDecision = "eingriff";
-    }
-
-    document.getElementById("mainOptions").style.display = "none";
-    document.getElementById("interventionOptions").style.display = "block";
-  };
-
-  window.recordReaction = async function (action) {
-    if (reactionTimeMs === null) {
-      reactionTimeMs = Math.round(performance.now() - startTime);
-      firstDecision = action;
-    }
-
-    const entry = {
-      participant_id: getParticipantId(),
-      situation_no: currentSituationIndex,
-      image_name: "Bild" + currentSituationIndex + ".png",
-      first_decision: firstDecision,
-      final_action: action,
-      reaction_time_ms: reactionTimeMs,
-      client_timestamp: new Date().toISOString()
-	  age_group: ageGroup,
-	  experience_level: experienceLevel,
-    };
 
     try {
-      await sendResultToSupabase(entry);
-      console.log("Erfolgreich gespeichert:", entry);
-      nextSituation();
+      // Alle Feedback-Einträge nacheinander an Supabase senden
+      for (const entry of entries) {
+        await sendImprovementFeedbackToSupabase(entry);
+      }
+
+      // Nach erfolgreichem Speichern Abschlussseite anzeigen
+      showFinalThankYouPage();
     } catch (error) {
-      console.error("Fehler beim Speichern:", error);
-      alert("Speichern fehlgeschlagen. Bitte F12 öffnen und Konsole prüfen.");
+      console.error("Fehler beim Speichern des Feedbacks:", error);
+      alert("Feedback konnte nicht gespeichert werden. Bitte F12 öffnen und Konsole prüfen.");
     }
   };
 
-  function nextSituation() {
-    currentSituationIndex++;
-
-    if (currentSituationIndex <= totalImages) {
-      loadSituation();
-    } else {
-      showEndPage();
-    }
-  }
-
-  function showEndPage() {
+  // Zeigt die letzte Dankeseite nach Abschluss der gesamten Umfrage
+  function showFinalThankYouPage() {
     document.getElementById("imagePage").innerHTML = `
       <div class="card">
         <h1>Fertig</h1>
-        <p>Alle ${totalImages} Situationen wurden bearbeitet.</p>
+        <p>Danke, deine Antworten und dein Feedback wurden gespeichert.</p>
       </div>
     `;
   }
