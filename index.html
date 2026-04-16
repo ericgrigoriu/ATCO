@@ -419,15 +419,15 @@ window.showImagePage = window.startSurvey;
         <option value="5">5</option>
       </select>
 
-      <label for="comment_${index}">Verbesserungsvorschlag</label>
-      <textarea id="comment_${index}" placeholder="Dein Verbesserungsvorschlag..."></textarea>
+      <label for="comment_${index}">Anmerkungen</label>
+      <textarea id="comment_${index}" placeholder="..."></textarea>
     </div>
   `).join("");
 
   document.getElementById("imagePage").innerHTML = `
     <div class="card">
       <h1>Abschlussfeedback</h1>
-      <p>Bitte bewerte die folgenden Möglichkeiten und gib jeweils einen kurzen Verbesserungsvorschlag an.</p>
+      <p>Bitte bewerte die folgenden Unterstützungen und gib jeweils eine kurze Anmerkung.</p>
 
       <div class="feedback-list">
         ${feedbackHtml}
