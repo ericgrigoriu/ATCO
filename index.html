@@ -108,115 +108,67 @@
   border-radius: 8px;
   box-sizing: border-box;
 }
+
+	  .form-block {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.form-block label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.form-block select {
+  width: 100%;
+  max-width: 320px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+	  
   </style>
 </head>
-<iframe name="hidden_iframe" style="display:none;"></iframe>
 <body>
+  <iframe name="hidden_iframe" style="display:none;"></iframe>
 
-  <!-- Startseite -->
+<!-- Startseite -->
+
   <div id="startPage" class="screen">
-    <!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Startseite mit Bild</title>
+  <div class="card">
+    <h1>Startseite</h1>
+    <p>
+      Dir werden nacheinander mehrere Situationen aus der Sicht eines ATCO angezeigt.
+      Bitte entscheide jeweils, ob ein Eingriff erforderlich ist oder nicht.
+    </p>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      text-align: center;
-    }
-
-    .screen {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .card {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      max-width: 90vw;
-    }
-
-    h1 {
-      margin-top: 0;
-    }
-
-    button {
-      padding: 12px 24px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      background: #2196F3;
-      color: white;
-      margin-top: 20px;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-
-    #imagePage {
-      display: none;
-      padding: 20px;
-    }
-
-    #imagePage img {
-      width: 1200px;
-      max-width: 95vw;
-      height: auto;
-      border-radius: 8px;
-      margin-top: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
-    .action-buttons {
-      margin-top: 20px;
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .green {
-      background: #4CAF50;
-    }
-
-    .red {
-      background: #FF0000;
-    }
-
-    .btn-eingriff {
-  	background: #c0392b;
-  	color: white;
-	}
-
-    .btn-kein-eingriff {
-  	background: #5bb450;
-  	color: white;
-	}
-  </style>
-</head>
-<iframe name="hidden_iframe" style="display:none;"></iframe>
-<body>
-
-  <!-- Startseite -->
-  <div id="startPage" class="screen">
-    <div class="card">
-      <h1>Startseite</h1>
-      <p>Dir werden nacheinander mehrere Situationen aus der Sicht eines ATCO angezeigt. Daraufhin bitte ich dich zu entscheiden, ob ein Eingriff erforderlich ist oder nicht, und wenn, warum. </p>
-      <button onclick="showImagePage()">Start</button>
+    <div class="form-block">
+      <label for="ageGroup">Altersgruppe</label>
+      <select id="ageGroup">
+        <option value="">Bitte auswählen</option>
+        <option value="unter_20">unter 20</option>
+        <option value="20_29">20–29</option>
+        <option value="30_39">30–39</option>
+        <option value="40_plus">40+</option>
+      </select>
     </div>
+
+    <div class="form-block">
+      <label for="experienceLevel">Vorerfahrung mit Flugsicherung / Luftverkehr</label>
+      <select id="experienceLevel">
+        <option value="">Bitte auswählen</option>
+        <option value="keine">keine</option>
+        <option value="wenig">wenig</option>
+        <option value="viel">viel</option>
+      </select>
+    </div>
+
+    <button type="button" onclick="startSurvey()">Start</button>
   </div>
+</div>
 
   <!-- Bildseite -->
   <div id="imagePage" class="screen">
@@ -249,6 +201,8 @@
   let reactionTimeMs = null;
   let firstDecision = null;
   let currentSituationIndex = 1;
+  let ageGroup = "";
+  let experienceLevel = "";
 
   const totalImages = 3; // anpassen
 
@@ -295,11 +249,42 @@
     document.getElementById("interventionOptions").style.display = "none";
   }
 
-  window.showImagePage = function () {
-    document.getElementById("startPage").style.display = "none";
-    document.getElementById("imagePage").style.display = "flex";
-    loadSituation();
-  };
+  window.startSurvey = function () {
+  const ageSelect = document.getElementById("ageGroup");
+  const expSelect = document.getElementById("experienceLevel");
+  const startPage = document.getElementById("startPage");
+  const imagePage = document.getElementById("imagePage");
+  const titleEl = document.getElementById("situationTitle");
+  const imgEl = document.getElementById("situationImage");
+
+  if (!ageSelect || !expSelect) {
+    alert("ageGroup oder experienceLevel wurde im HTML nicht gefunden.");
+    console.error("Fehlende Select-Elemente", { ageSelect, expSelect });
+    return;
+  }
+
+  if (!startPage || !imagePage || !titleEl || !imgEl) {
+    alert("Ein benötigtes Element der Bildseite wurde nicht gefunden.");
+    console.error("Fehlende Elemente", { startPage, imagePage, titleEl, imgEl });
+    return;
+  }
+
+  ageGroup = ageSelect.value;
+  experienceLevel = expSelect.value;
+
+  if (!ageGroup || !experienceLevel) {
+    alert("Bitte wähle zuerst Altersgruppe und Vorerfahrung aus.");
+    return;
+  }
+
+  startPage.style.display = "none";
+  imagePage.style.display = "flex";
+  loadSituation();
+};
+
+// optional: falls irgendwo noch showImagePage() aufgerufen wird
+	
+window.showImagePage = window.startSurvey;
 
   window.handleInterventionStart = function () {
     if (reactionTimeMs === null) {
@@ -319,6 +304,8 @@
 
     const entry = {
       participant_id: getParticipantId(),
+	  age_group: ageGroup,
+  	  experience_level: experienceLevel,
       situation_no: currentSituationIndex,
       image_name: "Bild" + currentSituationIndex + ".png",
       first_decision: firstDecision,
