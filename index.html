@@ -79,63 +79,106 @@
     }
 
     .btn-eingriff {
-  	background: #c0392b;
+  	  background: #c0392b;
   	color: white;
 	}
 
     .btn-kein-eingriff {
-  	background: #5bb450;
-  	color: white;
+  	  background: #5bb450;
+  	  color: white;
 	}
 
 	.form-block {
+  	  margin-top: 20px;
+      text-align: left;
+    }
+
+	.form-block label {
+  	  display: block;
+  	  margin-bottom: 8px;
+  	  font-weight: bold;
+	}
+
+	.form-block select {
+  	  width: 100%;
+  	  max-width: 320px;
+  	  padding: 10px;
+  	  font-size: 16px;
+  	  border: 1px solid #ccc;
+  	  border-radius: 8px;
+  	  box-sizing: border-box;
+	}
+
+	.form-block {
+  	  margin-top: 20px;
+  	  text-align: left;
+	}
+
+	.form-block label {
+  	  display: block;
+  	  margin-bottom: 8px;
+  	  font-weight: bold;
+	}
+
+	.form-block select {
+  	  width: 100%;
+  	  max-width: 320px;
+  	  padding: 10px;
+  	  font-size: 16px;
+  	  border: 1px solid #ccc;
+  	  border-radius: 8px;
+  	  box-sizing: border-box;
+	}
+
+	.feedback-list {
   margin-top: 20px;
   text-align: left;
 }
 
-.form-block label {
+.feedback-item {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: #fafafa;
+}
+
+.feedback-item h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.feedback-item label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   font-weight: bold;
 }
 
-.form-block select {
+.feedback-item select,
+.feedback-item textarea {
   width: 100%;
-  max-width: 320px;
+  max-width: 100%;
+  box-sizing: border-box;
   padding: 10px;
-  font-size: 16px;
+  font-size: 15px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  box-sizing: border-box;
+  margin-bottom: 12px;
 }
 
-	  .form-block {
-  margin-top: 20px;
-  text-align: left;
-}
-
-.form-block label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-}
-
-.form-block select {
-  width: 100%;
-  max-width: 320px;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-sizing: border-box;
+.feedback-item textarea {
+  min-height: 100px;
+  resize: vertical;
 }
 	  
   </style>
 </head>
+	
 <body>
   <iframe name="hidden_iframe" style="display:none;"></iframe>
 
-<!-- Startseite -->
+  <!-- Startseite -->
 
   <div id="startPage" class="screen">
   <div class="card">
@@ -179,10 +222,10 @@
       <img id="situationImage" src="Bild1.png" alt="Situation 1">
 
       <div class="action-buttons">
-  <div id="mainOptions">
-    <button class="green" onclick="handleInterventionStart()">Eingriff</button>
-    <button class="red" onclick="recordReaction('kein_eingriff')">Kein Eingriff</button>
-  </div>
+  	  <div id="mainOptions">
+    	<button class="green" onclick="handleInterventionStart()">Eingriff</button>
+    	<button class="red" onclick="recordReaction('kein_eingriff')">Kein Eingriff</button>
+  	</div>
 
   <div id="interventionOptions" style="display: none; margin-top: 20px;">
     <button onclick="recordReaction('steigen')">Steigen</button>
@@ -191,9 +234,9 @@
     <button onclick="recordReaction('rechts')">Rechts</button>
   </div>
 </div>
-
-    </div>
-  </div>
+	
+</div>
+</div>
 
 <script>
   const SUPABASE_URL = "https://lwdjghocgkscsdfujghz.supabase.co";
@@ -207,6 +250,12 @@
   let experienceLevel = "";
 
   const totalImages = 3; // anpassen
+
+  const improvementOptions = [
+  	"Möglichkeit A",
+  	"Möglichkeit B",
+  	"Möglichkeit C"
+  ];
 
   function getParticipantId() {
     let id = localStorage.getItem("participantId");
@@ -234,6 +283,24 @@
       throw new Error(errorText);
     }
   }
+
+async function sendImprovementFeedbackToSupabase(entry) {
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/improvement_feedback`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Prefer": "return=minimal"
+    },
+    body: JSON.stringify(entry)
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText);
+  }
+}
 
   function loadSituation() {
     document.getElementById("situationTitle").textContent =
@@ -332,18 +399,87 @@ window.showImagePage = window.startSurvey;
     if (currentSituationIndex <= totalImages) {
       loadSituation();
     } else {
-      showEndPage();
+      showFeedbackPage();
     }
   }
 
-  function showEndPage() {
-    document.getElementById("imagePage").innerHTML = `
-      <div class="card">
-        <h1>Fertig</h1>
-        <p>Alle ${totalImages} Situationen wurden bearbeitet.</p>
+  function showFeedbackPage() {
+  const feedbackHtml = improvementOptions.map((option, index) => `
+    <div class="feedback-item">
+      <h3>${option}</h3>
+
+      <label for="rating_${index}">Bewertung (0–5)</label>
+      <select id="rating_${index}">
+        <option value="">Bitte auswählen</option>
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+
+      <label for="comment_${index}">Verbesserungsvorschlag</label>
+      <textarea id="comment_${index}" placeholder="Dein Verbesserungsvorschlag..."></textarea>
+    </div>
+  `).join("");
+
+  document.getElementById("imagePage").innerHTML = `
+    <div class="card">
+      <h1>Abschlussfeedback</h1>
+      <p>Bitte bewerte die folgenden Möglichkeiten und gib jeweils einen kurzen Verbesserungsvorschlag an.</p>
+
+      <div class="feedback-list">
+        ${feedbackHtml}
       </div>
-    `;
+
+      <button onclick="submitImprovementFeedback()">Feedback absenden</button>
+    </div>
+  `;
+}
+
+window.submitImprovementFeedback = async function () {
+  const participantId = getParticipantId();
+  const entries = [];
+
+  for (let i = 0; i < improvementOptions.length; i++) {
+    const rating = document.getElementById(`rating_${i}`).value;
+    const comment = document.getElementById(`comment_${i}`).value.trim();
+
+    if (rating === "") {
+      alert(`Bitte wähle für "${improvementOptions[i]}" eine Bewertung aus.`);
+      return;
+    }
+
+    entries.push({
+      participant_id: participantId,
+      option_name: improvementOptions[i],
+      rating: Number(rating),
+      comment: comment,
+      client_timestamp: new Date().toISOString()
+    });
   }
+
+  try {
+    for (const entry of entries) {
+      await sendImprovementFeedbackToSupabase(entry);
+    }
+
+    showFinalThankYouPage();
+  } catch (error) {
+    console.error("Fehler beim Speichern des Feedbacks:", error);
+    alert("Feedback konnte nicht gespeichert werden. Bitte F12 öffnen und Konsole prüfen.");
+  }
+};
+
+  function showFinalThankYouPage() {
+  document.getElementById("imagePage").innerHTML = `
+    <div class="card">
+      <h1>Fertig</h1>
+      <p>Danke, deine Antworten und dein Feedback wurden gespeichert.</p>
+    </div>
+  `;
+}
 </script>
 </body>
 </html>
