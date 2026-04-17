@@ -334,8 +334,8 @@
 
   // Lädt die aktuelle Situation: Titel, Bild und Timer werden zurückgesetzt
   function loadSituation() {
-  let imageName = "";
-  let titleText = "";
+  	let imageName = "";
+  	let titleText = "";
 
   if (currentPhase === 1) {
     imageName = "Bild" + currentSituationIndex + ".png";
@@ -394,6 +394,11 @@
       firstDecision = action;
     }
 
+	const imageName =
+		currentPhase === 1
+	  	? "Bild" + currentSituationIndex + ".png"
+		: "Bildloesung" + currentSituationIndex + ".png";
+	  
     const entry = {
       participant_id: getParticipantId(),
       age_group: ageGroup,
@@ -410,7 +415,7 @@
 	  if (currentPhase === 1)  {
 		  await sendResultToSupabase(entry);
 	  } else {
-      	  await sendResultToSupabase(entry);
+      	  await sendSolutionResultToSupabase(entry);
 	  }
       nextSituation();
     } catch (error) {
@@ -449,7 +454,7 @@ function showSupportIntroPage() {
         Bitte bewerte diese Szenen erneut.
         Bitte gib im Nachhinein Feedback zu den jeweiligen Unterstützungsmöglichkeiten.
       </p>
-      <button onclick="showFeedbackPage()">Weiter</button>
+      <button onclick="showSupportPage()">Weiter</button>
     </div>
   `;
 }
