@@ -399,7 +399,7 @@
       age_group: ageGroup,
       experience_level: experienceLevel,
       situation_no: currentSituationIndex,
-      image_name: "Bild" + currentSituationIndex + ".png",
+      image_name: imageName,
       first_decision: firstDecision,
       final_action: action,
       reaction_time_ms: reactionTimeMs,
@@ -407,7 +407,11 @@
     };
 
     try {
-      await sendResultToSupabase(entry);
+	  if (currentPhase === 1)  {
+		  await sendResultToSupabase(entry);
+	  } else {
+      	  await sendResultToSupabase(entry);
+	  }
       nextSituation();
     } catch (error) {
       console.error("Fehler beim Speichern:", error);
@@ -419,19 +423,27 @@
   function nextSituation() {
     currentSituationIndex++;
 
-    if (currentSituationIndex <= totalImages) {
+    if (currentSituationIndex <= totalImagesPhase1) {
       loadSituation();
     } else {
       showSupportIntroPage();
     }
-  }
+  } else {
+	  if (currentSituationIndex <= totalImagesPhase2) {
+		loadSituation();
+	  } else {
+	    showFeedbackPage();
+	  }
+  }	
+}
+
 
 
 
 function showSupportIntroPage() {
   document.getElementById("imagePage").innerHTML = `
     <div class="card">
-      <h1>Danke</h1>
+      <h1>2. Teil</h1>
       <p>
         Dir werden im Folgenden neue Szenarien mit mehreren Unterstützungshilfen angezeigt.
         Bitte bewerte diese Szenen erneut.
@@ -441,6 +453,36 @@ function showSupportIntroPage() {
     </div>
   `;
 }
+
+window.startSupportPhase = function () {
+	currentPhase = 2;
+	currentSituationIndex = 1;
+
+	document.getElementById("imagePage").innerHTML = `
+	<div class="card">
+	<h1 id="situationTitle"></h1>
+	<img id="situationImage" src="" alt="Situation">
+
+	<div class="action-buttons">
+        <div id="mainOptions">
+          <button class="green" onclick="handleInterventionStart()">Eingriff</button>
+          <button class="red" onclick="recordReaction('kein_eingriff')">Kein Eingriff</button>
+        </div>
+
+		<div id="interventionOptions" style="display: none; margin-top: 20px;">
+          <button onclick="recordReaction('steigen')">Steigen</button>
+          <button onclick="recordReaction('sinken')">Sinken</button>
+          <button onclick="recordReaction('links')">Links</button>
+          <button onclick="recordReaction('rechts')">Rechts</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+	loadSituation();
+};
+		
+	
 	
   // Baut die Abschlussseite mit Bewertung und Freitext für jede Option auf
   function showFeedbackPage() {
