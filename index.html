@@ -393,10 +393,26 @@
     if (currentSituationIndex <= totalImages) {
       loadSituation();
     } else {
-      showFeedbackPage();
+      showSupportIntroPage();
     }
   }
 
+
+
+function showSupportIntroPage() {
+  document.getElementById("imagePage").innerHTML = `
+    <div class="card">
+      <h1>Hinweis</h1>
+      <p>
+        Dir werden im Folgenden neue Szenarien mit mehreren Unterstützungshilfen angezeigt.
+        Bitte bewerte diese Szenen erneut.
+        Bitte gib im Nachhinein Feedback zu den jeweiligen Unterstützungsmöglichkeiten.
+      </p>
+      <button onclick="showFeedbackPage()">Weiter</button>
+    </div>
+  `;
+}
+	
   // Baut die Abschlussseite mit Bewertung und Freitext für jede Option auf
   function showFeedbackPage() {
     const feedbackHtml = improvementOptions.map((option, index) => `
