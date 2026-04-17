@@ -422,17 +422,17 @@
   // Wechselt entweder zur nächsten Situation oder zum Abschlussfeedback
   function nextSituation() {
     currentSituationIndex++;
-
-    if (currentSituationIndex <= totalImagesPhase1) {
-      loadSituation();
-    } else {
-      showSupportIntroPage();
-    }
-  } else {
-	  if (currentSituationIndex <= totalImagesPhase2) {
-		loadSituation();
-	  } else {
-	    showFeedbackPage();
+	if currentPhase === 1) {
+    	if (currentSituationIndex <= totalImagesPhase1) {
+      		loadSituation();
+    	} else {
+      		showSupportIntroPage();
+    	}
+  	} else {
+	  	if (currentSituationIndex <= totalImagesPhase2) {
+			loadSituation();
+	  	} else {
+	    	showFeedbackPage();
 	  }
   }	
 }
