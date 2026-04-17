@@ -252,13 +252,15 @@
   let reactionTimeMs = null;
   let firstDecision = null;
   let currentSituationIndex = 1;
+  let currentPhase = 1; // 1 = Normale Bilder, 2 = Bilder mit Unterstützung
 
   // Angaben aus der Startseite
   let ageGroup = "";
   let experienceLevel = "";
 
   // Anzahl der vorhandenen Bilder: Bild1.png bis BildX.png
-  const totalImages = 3;
+  const totalImagesPhase1 = 3;
+  const totalImagesPhase2 = 4;
 
   // Optionen für das Abschlussfeedback
   const improvementOptions = [
@@ -295,6 +297,23 @@
     }
   }
 
+  async function sendSolutionResultToSupabase(entry) {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/responses_solution`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify(entry)
+    });
+
+    if (!response.ok) {
+      throw new Error(await response.text());
+    }
+  }
+
   // Speichert das Abschlussfeedback in der Tabelle "improvement_feedback"
   async function sendImprovementFeedbackToSupabase(entry) {
     const response = await fetch(`${SUPABASE_URL}/rest/v1/improvement_feedback`, {
@@ -315,20 +334,30 @@
 
   // Lädt die aktuelle Situation: Titel, Bild und Timer werden zurückgesetzt
   function loadSituation() {
-    document.getElementById("situationTitle").textContent =
-      "Situation " + currentSituationIndex;
+  let imageName = "";
+  let titleText = "";
 
-    const img = document.getElementById("situationImage");
-    img.src = "Bild" + currentSituationIndex + ".png";
-    img.alt = "Situation " + currentSituationIndex;
-
-    startTime = performance.now();
-    reactionTimeMs = null;
-    firstDecision = null;
-
-    document.getElementById("mainOptions").style.display = "block";
-    document.getElementById("interventionOptions").style.display = "none";
+  if (currentPhase === 1) {
+    imageName = "Bild" + currentSituationIndex + ".png";
+    titleText = "Situation " + currentSituationIndex;
+  } else {
+    imageName = "Bildloesung" + currentSituationIndex + ".png";
+    titleText = "Situation mit Unterstützung " + currentSituationIndex;
   }
+
+  document.getElementById("situationTitle").textContent = titleText;
+
+  const img = document.getElementById("situationImage");
+  img.src = imageName;
+  img.alt = titleText;
+
+  startTime = performance.now();
+  reactionTimeMs = null;
+  firstDecision = null;
+
+  document.getElementById("mainOptions").style.display = "block";
+  document.getElementById("interventionOptions").style.display = "none";
+}
 
   // Startet die Umfrage nach Prüfung der beiden Pflichtfelder
   window.startSurvey = function () {
@@ -402,7 +431,7 @@
 function showSupportIntroPage() {
   document.getElementById("imagePage").innerHTML = `
     <div class="card">
-      <h1>Hinweis</h1>
+      <h1>Danke</h1>
       <p>
         Dir werden im Folgenden neue Szenarien mit mehreren Unterstützungshilfen angezeigt.
         Bitte bewerte diese Szenen erneut.
