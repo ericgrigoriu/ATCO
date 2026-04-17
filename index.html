@@ -126,6 +126,16 @@
       box-sizing: border-box;
     }
 
+	.form-block input {
+  	  width: 100%;
+  	  max-width: 320px;
+  	  padding: 10px;
+  	  font-size: 16px;
+  	  border: 1px solid #ccc;
+  	  border-radius: 8px;
+  	  box-sizing: border-box;
+	}
+
     /* Styles für die spätere Feedback-Seite */
     .feedback-list {
       margin-top: 20px;
@@ -180,7 +190,7 @@
 
       <p>
         Dir werden nacheinander mehrere Situationen aus der Sicht eines ATCO angezeigt.
-        Bitte entscheide jeweils, ob ein Eingriff erforderlich ist oder nicht.
+        Bitte entscheide jeweils, ob ein Eingriff erforderlich ist oder nicht. Falls ja, gib eine Anweisung für das linkere der beiden Flugzeuge, die du als kritisch einstufst.
       </p>
 
       <!-- Auswahl der Altersgruppe -->
@@ -233,6 +243,11 @@
 
       <!-- Zweite Entscheidungsebene, nur sichtbar nach Klick auf "Eingriff" -->
       <div id="interventionOptions" style="display: none; margin-top: 20px;">
+		<div class="form-block">
+			<label for="targetCallsign">Für welches Flugzeug?</label>label>
+			<input type="text" id="targetCallsign" placeholder="z.B. GAF1234">
+		</div>
+		  
         <button onclick="recordReaction('steigen')">Steigen</button>
         <button onclick="recordReaction('sinken')">Sinken</button>
         <button onclick="recordReaction('links')">Links</button>
@@ -357,7 +372,12 @@
 
   document.getElementById("mainOptions").style.display = "block";
   document.getElementById("interventionOptions").style.display = "none";
-}
+
+  const targetInput = document.getElementById("targetCallsign");
+	if (targetInput) {
+  	  targetInput.value = "";
+	}
+  }
 
   // Startet die Umfrage nach Prüfung der beiden Pflichtfelder
   window.startSurvey = function () {
@@ -394,6 +414,24 @@
       firstDecision = action;
     }
 
+	let targetCallsign = "";
+
+	if (action !== "kein_eingriff") {
+  		const targetInput = document.getElementById("targetCallsign");
+
+  	if (!targetInput) {
+    	alert("Callsign-Feld wurde nicht gefunden.");
+    	return;
+  	}
+
+  	targetCallsign = targetInput.value.trim().toUpperCase();
+
+  	if (!targetCallsign) {
+    	alert("Bitte gib ein Callsign für das betroffene Flugzeug ein.");
+    	return;
+  	}
+  }
+
 	const imageName =
 		currentPhase === 1
 	  	? "Bild" + currentSituationIndex + ".png"
@@ -405,10 +443,11 @@
       experience_level: experienceLevel,
       situation_no: currentSituationIndex,
       image_name: imageName,
+	  target_callsign: targetCallsign,
       first_decision: firstDecision,
       final_action: action,
       reaction_time_ms: reactionTimeMs,
-      client_timestamp: new Date().toISOString()
+      client_timestamp: new Date().toISOString()		
     };
 
     try {
@@ -475,11 +514,16 @@ window.startSupportPhase = function () {
         </div>
 
 		<div id="interventionOptions" style="display: none; margin-top: 20px;">
-          <button onclick="recordReaction('steigen')">Steigen</button>
-          <button onclick="recordReaction('sinken')">Sinken</button>
-          <button onclick="recordReaction('links')">Links</button>
-          <button onclick="recordReaction('rechts')">Rechts</button>
-        </div>
+  			<div class="form-block">
+    			<label for="targetCallsign">Für welches Flugzeug?</label>
+    			<input type="text" id="targetCallsign" placeholder="z. B. RYR73SM">
+  			</div>
+
+  		<button onclick="recordReaction('steigen')">Steigen</button>
+  		<button onclick="recordReaction('sinken')">Sinken</button>
+  		<button onclick="recordReaction('links')">Links</button>
+  		<button onclick="recordReaction('rechts')">Rechts</button>
+	</div>
       </div>
     </div>
   `;
