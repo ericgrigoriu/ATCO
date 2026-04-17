@@ -427,7 +427,7 @@
   // Wechselt entweder zur nächsten Situation oder zum Abschlussfeedback
   function nextSituation() {
     currentSituationIndex++;
-	if currentPhase === 1) {
+	if (currentPhase === 1) {
     	if (currentSituationIndex <= totalImagesPhase1) {
       		loadSituation();
     	} else {
@@ -454,7 +454,7 @@ function showSupportIntroPage() {
         Bitte bewerte diese Szenen erneut.
         Bitte gib im Nachhinein Feedback zu den jeweiligen Unterstützungsmöglichkeiten.
       </p>
-      <button onclick="showSupportPage()">Weiter</button>
+      <button onclick="startSupportPage()">Weiter</button>
     </div>
   `;
 }
